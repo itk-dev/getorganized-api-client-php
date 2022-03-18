@@ -25,6 +25,8 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.7",
+        "phpspec/prophecy-phpunit": "^2.0",
+        "phpstan/phpstan": "^1.4",
         "phpunit/phpunit": "^9.5",
         "symfony/finder": "^5.4 || ^6.0",
         "symfony/yaml": "^5.4 || ^6.0"
@@ -45,6 +47,12 @@
         ],
         "coding-standards-apply": [
             "@coding-standards-apply/php-cs-fixer"
+        ],
+        "code-analysis/phpstan": [
+            "phpstan analyse --level=5 src tests"
+        ],
+        "code-analysis": [
+            "@code-analysis/phpstan"
         ]
     }
 }
