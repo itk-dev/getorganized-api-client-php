@@ -17,10 +17,25 @@ class Cases extends Service
      */
     public function FindCases(array $body)
     {
-        return $this->invoke(
+        $result = $this->invoke(
             'POST',
             $this->getApiBaseUrl().__FUNCTION__,
             $body
         );
+
+        if (isset($result['ResultsXml'])) {
+            $xml = new \SimpleXMLElement($result['ResultsXml']);
+            $cases = [];
+            foreach ($xml->Case as $case) {
+                $cases[] = [
+                    'CaseID' => (string)$case['CaseID'],
+                    'Name' => (string)$case['Name'],
+                ];
+            }
+
+            return $cases;
+        }
+
+        return [];
     }
 }

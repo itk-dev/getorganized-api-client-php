@@ -12,7 +12,7 @@ class Client
     private string $username;
     private string $password;
     private string $baseUrl;
-    private ?GuzzleClient $client = null;
+    protected ?GuzzleClient $client = null;
 
     public function __construct(string $username, string $password, string $baseUrl)
     {
@@ -49,7 +49,7 @@ class Client
         return $service;
     }
 
-    private function setUpClient()
+    protected function setUpClient()
     {
         $this->client = new GuzzleClient([
             'base_uri' =>  $this->baseUrl,
