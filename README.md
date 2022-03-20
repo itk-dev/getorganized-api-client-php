@@ -44,7 +44,7 @@ class Tiles extends Service
 
     public function GetTilesNavigation()
     {
-        return $this->invoke(
+        return $this->getData(
             'GET',
             $this->getApiBaseUrl().__FUNCTION__,
             []

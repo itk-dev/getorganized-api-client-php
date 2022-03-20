@@ -2,23 +2,25 @@
 
 namespace ItkDev\GetOrganized;
 
-use GuzzleHttp\Client as GuzzleClient;
 use ItkDev\GetOrganized\Exception\InvalidServiceNameException;
 use ItkDev\GetOrganized\Service\Cases;
 use ItkDev\GetOrganized\Service\Tiles;
+use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Contracts\HttpClient\ResponseInterface;
 
-class Client
+class Client implements ClientInterface
 {
     private string $username;
     private string $password;
-    private string $baseUrl;
-    protected ?GuzzleClient $client = null;
+    private string $baseUri;
+    private HttpClientInterface $httpClient;
 
     public function __construct(string $username, string $password, string $baseUrl)
     {
         $this->username = $username;
         $this->password = $password;
-        $this->baseUrl = $baseUrl;
+        $this->baseUri = $baseUrl;
     }
 
     /**
@@ -26,16 +28,12 @@ class Client
      */
     public function api(string $name): Service
     {
-        if (null === $this->client) {
-            $this->setUpClient();
-        }
-
         switch ($name) {
             case 'tiles':
-                $service = new Tiles($this->client);
+                $service = new Tiles($this);
                 break;
             case 'cases':
-                $service = new Cases($this->client);
+                $service = new Cases($this);
                 break;
             default:
                 $message = sprintf('Undefined service "%s"', $name);
@@ -45,18 +43,19 @@ class Client
         return $service;
     }
 
-    protected function setUpClient()
+    public function request(string $method, string $url, array $options = []): ResponseInterface
     {
-        $this->client = new GuzzleClient([
-            'base_uri' => $this->baseUrl,
-            'auth' => [
-                $this->username,
-                $this->password,
-                'ntlm',
-                ],
-            'headers' => [
-                'Content-Type' => 'application/json',
-            ],
-        ]);
+        return $this->getHttpClient()->request($method, $url, $options);
+    }
+
+    protected function getHttpClient(): HttpClientInterface
+    {
+        if (null === $this->httpClient) {
+            $this->httpClient = HttpClient::createForBaseUri($this->baseUri, [
+                'auth_ntlm' => $this->username . ':' . $this->password,
+            ]);
+        }
+
+        return $this->httpClient;
     }
 }

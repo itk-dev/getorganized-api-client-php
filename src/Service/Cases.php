@@ -3,11 +3,12 @@
 namespace ItkDev\GetOrganized\Service;
 
 use ItkDev\GetOrganized\Exception\GetOrganizedClientException;
+use ItkDev\GetOrganized\Exception\InvalidResponseException;
 use ItkDev\GetOrganized\Service;
 
 class Cases extends Service
 {
-    protected function getApiBaseUrl(): string
+    protected function getApiBasePath(): string
     {
         return '/_goapi/Cases/';
     }
@@ -15,12 +16,12 @@ class Cases extends Service
     /**
      * @throws GetOrganizedClientException
      */
-    public function FindCases(array $body)
+    public function FindCases(array $query)
     {
-        $result = $this->invoke(
+        $result = $this->getData(
             'POST',
-            $this->getApiBaseUrl().__FUNCTION__,
-            $body
+            $this->getApiBasePath().__FUNCTION__,
+            ['json' => $query],
         );
 
         if (isset($result['ResultsXml'])) {
@@ -36,6 +37,6 @@ class Cases extends Service
             return $cases;
         }
 
-        return [];
+        throw new InvalidResponseException('ResultsXml missing in response');
     }
 }

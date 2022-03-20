@@ -6,16 +6,16 @@ use ItkDev\GetOrganized\Service;
 
 class Tiles extends Service
 {
-    protected function getApiBaseUrl(): string
+    protected function getApiBasePath(): string
     {
         return '/_goapi/Administration/';
     }
 
     public function GetTilesNavigation()
     {
-        return $this->invoke(
+        return $this->getData(
             'GET',
-            $this->getApiBaseUrl().__FUNCTION__,
+            $this->getApiBasePath().__FUNCTION__,
             []
         );
     }
