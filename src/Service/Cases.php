@@ -2,6 +2,7 @@
 
 namespace ItkDev\GetOrganized\Service;
 
+use Exception;
 use ItkDev\GetOrganized\Exception\GetOrganizedClientException;
 use ItkDev\GetOrganized\Service;
 
@@ -14,6 +15,7 @@ class Cases extends Service
 
     /**
      * @throws GetOrganizedClientException
+     * @throws Exception
      */
     public function FindCases(array $body)
     {
