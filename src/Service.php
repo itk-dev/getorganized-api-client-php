@@ -23,7 +23,7 @@ abstract class Service
      *
      * @throws GetOrganizedClientException
      */
-    protected function getData(string $method, string $url, array $options)
+    protected function getData(string $method, string $url, array $options = [])
     {
         $response = $this->client->request($method, $url, $options);
 

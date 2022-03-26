@@ -4,6 +4,7 @@ namespace ItkDev\GetOrganized;
 
 use ItkDev\GetOrganized\Exception\InvalidServiceNameException;
 use ItkDev\GetOrganized\Service\Cases;
+use ItkDev\GetOrganized\Service\Documents;
 use ItkDev\GetOrganized\Service\Tiles;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -29,6 +30,9 @@ class Client implements ClientInterface
     public function api(string $name): Service
     {
         switch ($name) {
+            case 'documents':
+                $service = new Documents($this);
+                break;
             case 'tiles':
                 $service = new Tiles($this);
                 break;
