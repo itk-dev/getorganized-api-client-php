@@ -28,7 +28,6 @@ class GuzzleClient extends BaseGuzzleClient
         } catch (ParseException $parseException) {
         }
 
-
         throw new \RuntimeException(json_encode([__METHOD__, func_get_args()]));
     }
 }

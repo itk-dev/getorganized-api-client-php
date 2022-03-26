@@ -22,6 +22,7 @@ abstract class Service
 
     /**
      * Invoke API method.
+     *
      * @throws GetOrganizedClientException
      */
     protected function invoke(string $method, string $url, array $body)
