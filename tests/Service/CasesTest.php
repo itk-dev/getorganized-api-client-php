@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace ItkDev\GetOrganized\Service;
 
-use PHPUnit\Framework\TestCase;
 use ItkDev\GetOrganized\Mock\MockClient;
+use PHPUnit\Framework\TestCase;
 
 final class CasesTest extends TestCase
 {

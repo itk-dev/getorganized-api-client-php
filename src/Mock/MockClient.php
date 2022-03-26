@@ -4,9 +4,7 @@ namespace ItkDev\GetOrganized\Mock;
 
 use ItkDev\GetOrganized\Client;
 use Symfony\Component\HttpClient\MockHttpClient;
-use Symfony\Component\HttpClient\Response\MockResponse;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Symfony\Contracts\HttpClient\ResponseInterface;
 
 final class MockClient extends Client
 {
@@ -23,6 +21,7 @@ final class MockClient extends Client
         $callback = function ($method, $url, $options) {
             // Remove scheme and domain from url.
             $path = preg_replace('@^[a-z]+://[^/]+@', '', $url);
+
             return $this->requestHelper->getResponse($method, $path, $options);
         };
 

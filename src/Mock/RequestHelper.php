@@ -2,11 +2,8 @@
 
 namespace ItkDev\GetOrganized\Mock;
 
-use http\Client\Response;
-use Psr\Http\Message\RequestInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpClient\HttpClientTrait;
-use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
@@ -42,7 +39,7 @@ final class RequestHelper
         } catch (ParseException $parseException) {
         }
 
-        throw new \RuntimeException(json_encode([__METHOD__, func_get_args()]));
+        throw new \RuntimeException(self::jsonEncode([__METHOD__, func_get_args()]));
     }
 
     private function buildRequest(string $method, $uri, array $options): MockRequest
@@ -56,7 +53,7 @@ final class RequestHelper
     private function getBody(array $options): ?string
     {
         if (isset($options['json'])) {
-            $options['body'] = Utils::jsonEncode($options['json']);
+            $options['body'] = self::jsonEncode($options['json']);
             unset($options['json']);
         }
 

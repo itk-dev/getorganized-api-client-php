@@ -52,7 +52,7 @@ class Client implements ClientInterface
     {
         if (null === $this->httpClient) {
             $this->httpClient = HttpClient::createForBaseUri($this->baseUri, [
-                'auth_ntlm' => $this->username . ':' . $this->password,
+                'auth_ntlm' => $this->username.':'.$this->password,
             ]);
         }
 

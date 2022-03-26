@@ -2,8 +2,6 @@
 
 namespace ItkDev\GetOrganized;
 
-use GuzzleHttp\Client as GuzzleClient;
-use GuzzleHttp\Exception\GuzzleException;
 use ItkDev\GetOrganized\Exception\GetOrganizedClientException;
 
 abstract class Service
