@@ -22,11 +22,7 @@ class Client
     }
 
     /**
-     * @param string $name
-     *
-     * @return Service
      * @throws InvalidServiceNameException
-     *
      */
     public function api(string $name): Service
     {
@@ -52,7 +48,7 @@ class Client
     protected function setUpClient()
     {
         $this->client = new GuzzleClient([
-            'base_uri' =>  $this->baseUrl,
+            'base_uri' => $this->baseUrl,
             'auth' => [
                 $this->username,
                 $this->password,

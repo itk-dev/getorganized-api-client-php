@@ -28,8 +28,8 @@ class Cases extends Service
             $cases = [];
             foreach ($xml->Case as $case) {
                 $cases[] = [
-                    'CaseID' => (string)$case['CaseID'],
-                    'Name' => (string)$case['Name'],
+                    'CaseID' => (string) $case['CaseID'],
+                    'Name' => (string) $case['Name'],
                 ];
             }
 

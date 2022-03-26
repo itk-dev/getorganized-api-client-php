@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace ItkDev\GetOrganized\Service;
 
-use PHPUnit\Framework\TestCase;
 use ItkDev\GetOrganized\Mock\Client as MockClient;
+use PHPUnit\Framework\TestCase;
 
 final class CasesTest extends TestCase
 {
@@ -26,7 +26,7 @@ final class CasesTest extends TestCase
     {
         yield [
             [],
-            []
+            [],
         ];
 
         yield [
@@ -71,7 +71,7 @@ final class CasesTest extends TestCase
                 ['CaseID' => 'AKT-2021-000085', 'Name' => 'Test sagsnavn'],
                 ['CaseID' => 'AKT-2021-000086', 'Name' => 'ffm - testsag'],
                 ['CaseID' => 'AKT-2021-000087', 'Name' => 'ffm - testsag'],
-            ]
+            ],
         ];
     }
 }
