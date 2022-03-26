@@ -13,7 +13,7 @@
 
 -
   request:
-    # method: POST
+    method: POST
     options:
       json:
         # Will automatically be JSON encoded

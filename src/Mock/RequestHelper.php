@@ -4,6 +4,7 @@ namespace ItkDev\GetOrganized\Mock;
 
 use http\Client\Response;
 use Psr\Http\Message\RequestInterface;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpClient\HttpClientTrait;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
@@ -15,18 +16,14 @@ final class RequestHelper
 {
     use HttpClientTrait;
 
+    private ?array $items = null;
+
     public function getResponse(string $method, $uri = '', array $options = []): ResponseInterface
     {
-        $resourceFilename = __DIR__.'/resources/'.$uri.'.yaml';
-        if (!file_exists($resourceFilename)) {
-            throw new \RuntimeException(sprintf('Resource %s not found', $uri));
-        }
-
         $currentRequest = $this->buildRequest($method, $uri, $options);
 
         try {
-            $items = Yaml::parseFile($resourceFilename);
-            foreach ($items as $item) {
+            foreach ($this->getItems() as $item) {
                 $request = $this->buildRequest(
                     $item['request']['method'] ?? $method,
                     $item['request']['uri'] ?? $uri,
@@ -64,5 +61,29 @@ final class RequestHelper
         }
 
         return $options['body'] ?? null;
+    }
+
+    private function getItems(): array
+    {
+        if (null === $this->items) {
+            $directory = __DIR__.'/resources';
+            $files = (new Finder())->in($directory)->name('*.yaml');
+            foreach ($files as $file) {
+                $requestPath = preg_replace('/^'.preg_quote($directory.'/', '/').'|\.yaml$/', '', $file->getRealPath());
+                $items = Yaml::parseFile($file->getRealPath());
+                foreach ($items as $item) {
+                    // Add some defaults.
+                    if (!isset($item['request']['method'])) {
+                        $item['request']['method'] = 'GET';
+                    }
+                    if (!isset($item['request']['path'])) {
+                        $item['request']['path'] = $requestPath;
+                    }
+                    $this->items[] = $item;
+                }
+            }
+        }
+
+        return $this->items;
     }
 }
