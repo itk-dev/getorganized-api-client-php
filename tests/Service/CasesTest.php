@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ItkDev\GetOrganized\Service;
 
-use ItkDev\GetOrganized\Mock\Client as MockClient;
+use ItkDev\GetOrganized\Mock\MockClient;
 use PHPUnit\Framework\TestCase;
 
 final class CasesTest extends TestCase
@@ -24,11 +24,6 @@ final class CasesTest extends TestCase
 
     public function findCasesDataProvider(): iterable
     {
-        yield [
-            [],
-            [],
-        ];
-
         yield [
             [
                 'CaseIdFilter' => 'AKT-*',

@@ -2,8 +2,6 @@
 
 namespace ItkDev\GetOrganized;
 
-use GuzzleHttp\Client as GuzzleClient;
-use GuzzleHttp\Exception\GuzzleException;
 use ItkDev\GetOrganized\Exception\GetOrganizedClientException;
 
 abstract class Service
@@ -11,34 +9,24 @@ abstract class Service
     /**
      * Get API base url.
      */
-    abstract protected function getApiBaseUrl(): string;
+    abstract protected function getApiBasePath(): string;
 
-    private GuzzleClient $client;
+    private ClientInterface $client;
 
-    public function __construct(GuzzleClient $client)
+    public function __construct(ClientInterface $client)
     {
         $this->client = $client;
     }
 
     /**
-     * Invoke API method.
+     * Get data from API endpoint.
      *
      * @throws GetOrganizedClientException
      */
-    protected function invoke(string $method, string $url, array $body)
+    protected function getData(string $method, string $url, array $options)
     {
-        try {
-            $response = $this->client->request(
-                $method,
-                $url,
-                [
-                    'body' => json_encode($body),
-                ]
-            );
-        } catch (GuzzleException $e) {
-            throw new GetOrganizedClientException($e->getMessage(), $e->getCode(), $e);
-        }
+        $response = $this->client->request($method, $url, $options);
 
-        return json_decode((string) $response->getBody(), true);
+        return $response->toArray();
     }
 }

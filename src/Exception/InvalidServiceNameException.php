@@ -2,6 +2,6 @@
 
 namespace ItkDev\GetOrganized\Exception;
 
-class InvalidServiceNameException extends \Exception
+class InvalidServiceNameException extends GetOrganizedClientException
 {
 }
