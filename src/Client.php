@@ -15,7 +15,7 @@ class Client implements ClientInterface
     private string $username;
     private string $password;
     private string $baseUri;
-    private HttpClientInterface $httpClient;
+    private ?HttpClientInterface $httpClient = null;
 
     public function __construct(string $username, string $password, string $baseUrl)
     {
