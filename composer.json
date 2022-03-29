@@ -34,13 +34,13 @@
     },
     "scripts": {
         "coding-standards-check/php-cs-fixer": [
-            "php -n vendor/bin/php-cs-fixer fix --allow-risky=yes --dry-run"
+            "vendor/bin/php-cs-fixer fix --allow-risky=yes --dry-run"
         ],
         "coding-standards-check": [
             "@coding-standards-check/php-cs-fixer"
         ],
         "coding-standards-apply/php-cs-fixer": [
-            "php -n vendor/bin/php-cs-fixer --allow-risky=yes fix"
+            "vendor/bin/php-cs-fixer --allow-risky=yes fix"
         ],
         "coding-standards-apply": [
             "@coding-standards-apply/php-cs-fixer"
