@@ -19,7 +19,7 @@ class Documents extends Service
     public function Metadata(int $docId)
     {
         $result = $this->getData(
-            'POST',
+            'GET',
             $this->getApiBasePath().__FUNCTION__.'/'.$docId
         );
 
@@ -30,10 +30,7 @@ class Documents extends Service
             $xml = new \SimpleXMLElement($result['Metadata']);
             $metadata = [];
             foreach ($xml->attributes() as $name => $value) {
-                $metadata[] = [
-                    'name' => $name,
-                    'value' => $value,
-                ];
+                $metadata[$name] = (string) $value;
             }
 
             return $metadata;

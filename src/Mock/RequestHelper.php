@@ -2,6 +2,7 @@
 
 namespace ItkDev\GetOrganized\Mock;
 
+use ItkDev\GetOrganized\Mock\Exception\InvalidRequestException;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpClient\HttpClientTrait;
 use Symfony\Component\HttpClient\Response\MockResponse;
@@ -19,27 +20,24 @@ final class RequestHelper
     {
         $currentRequest = $this->buildRequest($method, $uri, $options);
 
-        try {
-            foreach ($this->getItems() as $item) {
-                $request = $this->buildRequest(
-                    $item['request']['method'] ?? $method,
-                    $item['request']['uri'] ?? $uri,
-                    $item['request']['options'] ?? []
-                );
-                if ($currentRequest == $request) {
-                    $info = [
-                        'http_code' => $item['response']['status'] ?? 200,
-                        'response_headers' => $item['response']['headers'] ?? null,
-                    ];
-                    $body = $this->getBody($item['response']);
+        foreach ($this->getItems() as $item) {
+            $request = $this->buildRequest(
+                $item['request']['method'] ?? $method,
+                $item['request']['uri'] ?? $uri,
+                $item['request']['options'] ?? []
+            );
+            if ($currentRequest->equals($request)) {
+                $info = [
+                    'http_code' => $item['response']['status'] ?? 200,
+                    'response_headers' => $item['response']['headers'] ?? null,
+                ];
+                $body = $this->getBody($item['response']);
 
-                    return new MockResponse($body, $info);
-                }
+                return new MockResponse($body, $info);
             }
-        } catch (ParseException $parseException) {
         }
 
-        throw new \RuntimeException(self::jsonEncode([__METHOD__, func_get_args()]));
+        throw new InvalidRequestException($currentRequest);
     }
 
     private function buildRequest(string $method, $uri, array $options): MockRequest
@@ -47,7 +45,7 @@ final class RequestHelper
         $options += ['base_uri' => 'https://example.com'];
         [$url, $options] = $this->prepareRequest($method, $uri, $options);
 
-        return new MockRequest($method, $uri, $options);
+        return new MockRequest($method, implode('', $url), $options);
     }
 
     private function getBody(array $options): ?string
@@ -66,17 +64,28 @@ final class RequestHelper
             $directory = __DIR__.'/resources';
             $files = (new Finder())->in($directory)->name('*.yaml');
             foreach ($files as $file) {
-                $requestPath = preg_replace('/^'.preg_quote($directory.'/', '/').'|\.yaml$/', '', $file->getRealPath());
-                $items = Yaml::parseFile($file->getRealPath());
-                foreach ($items as $item) {
-                    // Add some defaults.
-                    if (!isset($item['request']['method'])) {
-                        $item['request']['method'] = 'GET';
+                $requestPath = '/'.preg_replace('/^'.preg_quote($directory.'/', '/').'|\.yaml$/', '', $file->getRealPath());
+                try {
+                    $items = Yaml::parseFile($file->getRealPath());
+                    if (is_array($items)) {
+                        foreach ($items as $item) {
+                            // Add some defaults.
+                            if (!isset($item['request']['method'])) {
+                                $item['request']['method'] = 'GET';
+                            }
+                            if (isset($item['request']['uri'])) {
+                                // Resolve relative uri
+                                if (0 !== strpos('/', $item['request']['uri'])) {
+                                    $item['request']['uri'] = $requestPath.'/'.$item['request']['uri'];
+                                }
+                            } else {
+                                $item['request']['uri'] = $requestPath;
+                            }
+                            $this->items[] = $item;
+                        }
                     }
-                    if (!isset($item['request']['path'])) {
-                        $item['request']['path'] = $requestPath;
-                    }
-                    $this->items[] = $item;
+                } catch (ParseException $parseException) {
+                    // Ignore parse exceptions.
                 }
             }
         }
