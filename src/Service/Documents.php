@@ -44,48 +44,40 @@ class Documents extends Service
      * @throws GetOrganizedClientException
      * @throws InvalidFilePathException
      */
-    public function AddToDocumentLibrary(string $filePath, string $caseId, string $fileName = '', array $metaDataOptions = [], bool $overWrite = true, string $listName = 'Dokumenter', string $folderPath = '')
+    public function AddToDocumentLibrary(string $filePath, string $caseId, string $fileName = '', array $metadata = [], bool $overwrite = true, string $listName = 'Dokumenter', string $folderPath = '')
     {
         if (!file_exists($filePath)) {
-            throw new InvalidFilePathException(sprintf('File: %s does not exist', $filePath));
+            throw new InvalidFilePathException(sprintf('File %s does not exist', $filePath));
         }
-
-        // File does exist, transform it into byte array via stream
-        $fileByteArray = [];
-        $stream = fopen($filePath, 'r');
-
-        while (!feof($stream)) {
-            $fileByteArray = array_merge($fileByteArray, $this->stringToByteArray(fgets($stream)));
-        }
-
-        fclose($stream);
-
-        // Setup meta data
-        $metaData = $this->computeMetaData($metaDataOptions);
 
         return $this->getData(
             'POST',
             $this->getApiBasePath().__FUNCTION__,
             ['json' => [
-                'bytes' => $fileByteArray,
+                'bytes' => $this->fileToIntArray($filePath),
                 'CaseId' => $caseId,
                 'ListName' => $listName,
                 'FolderPath' => $folderPath,
                 'FileName' => $fileName,
-                'Metadata' => $metaData->asXML(),
-                'Overwrite' => $overWrite,
+                'Metadata' => $this->computeMetaData($metadata)->asXML(),
+                'Overwrite' => $overwrite,
             ]],
         );
     }
 
-    public function stringToByteArray($string)
+    public function fileToIntArray(string $filename): array
     {
-        $result = [];
-        for ($i = 0; $i < strlen($string); ++$i) {
-            $result[] = ord($string[$i]);
+        $ints = [];
+        $handle = fopen($filename, 'rb');
+        while (!feof($handle)) {
+            $bytes = fread($handle, 1024);
+            if ($bytes) {
+                $ints[] = array_map('ord', str_split($bytes));
+            }
         }
+        fclose($handle);
 
-        return $result;
+        return array_merge(...$ints);
     }
 
     private function computeMetaData(array $metaDataOptions)
