@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ItkDev\GetOrganized\Service\Documents;
 
 use ItkDev\GetOrganized\Mock\MockClient;
+use ItkDev\GetOrganized\Service\Documents;
 use PHPUnit\Framework\TestCase;
 
 final class MetadataTest extends TestCase

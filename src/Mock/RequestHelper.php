@@ -67,12 +67,10 @@ final class RequestHelper
             if (isset($item['directory'])) {
                 chdir($item['directory']);
             }
-            array_walk($options['json'], function ($value) {
+            array_walk($options['json'], function (&$value) {
                 if (preg_match('/^<@(?P<expression>.+)>$/', $value, $matches)) {
-                    return $this->evaluate($matches['expression']);
+                    $value = $this->evaluate($matches['expression']);
                 }
-
-                return $value;
             });
         }
 
