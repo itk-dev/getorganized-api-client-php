@@ -3,6 +3,7 @@
 namespace ItkDev\GetOrganized\Service;
 
 use ItkDev\GetOrganized\Exception\GetOrganizedClientException;
+use ItkDev\GetOrganized\Exception\InvalidFilePathException;
 use ItkDev\GetOrganized\Exception\InvalidResponseException;
 use ItkDev\GetOrganized\Service;
 
@@ -37,5 +38,65 @@ class Documents extends Service
         }
 
         throw new InvalidResponseException('Metadata missing in response');
+    }
+
+    /**
+     * @throws GetOrganizedClientException
+     * @throws InvalidFilePathException
+     */
+    public function AddToDocumentLibrary(string $filePath, string $caseId, string $fileName = '', array $metaDataOptions = [], bool $overWrite = true, string $listName = 'Dokumenter', string $folderPath = '')
+    {
+        if (!file_exists($filePath)) {
+            throw new InvalidFilePathException(sprintf('File: %s does not exist', $filePath));
+        }
+
+        // File does exist, transform it into byte array via stream
+        $fileByteArray = [];
+        $stream = fopen($filePath, 'r');
+
+        while (!feof($stream)) {
+            $fileByteArray = array_merge($fileByteArray, $this->string2intArr(fgets($stream)));
+        }
+
+        fclose($stream);
+
+        // Setup meta data
+        $metaData = $this->computeMetaData($metaDataOptions);
+
+        return $this->getData(
+            'POST',
+            $this->getApiBasePath().__FUNCTION__,
+            ['json' => [
+                'bytes' => $fileByteArray,
+                'CaseId' => $caseId,
+                'ListName' => $listName,
+                'FolderPath' => $folderPath,
+                'FileName' => $fileName,
+                'Metadata' => $metaData->asXML(),
+                'Overwrite' => $overWrite,
+            ]],
+        );
+    }
+
+    public function string2intArr($string)
+    {
+        $l = strlen($string);
+        $r = [];
+        for ($i = 0; $i < $l; ++$i) {
+            $r[] = ord($string[$i]);
+        }
+
+        return $r;
+    }
+
+    private function computeMetaData(array $metaDataOptions)
+    {
+        // "<z:row xmlns:z='#RowsetSchema' ows_CustomProperty='Another prop value' />"
+        $metadata = new \SimpleXMLElement('<z:row xmlns:z="#RowsetSchema"/>');
+        foreach ($metaDataOptions as $name => $value) {
+            $metadata->addAttribute($name, $value);
+        }
+
+        return $metadata;
     }
 }
