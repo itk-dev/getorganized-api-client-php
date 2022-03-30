@@ -55,7 +55,7 @@ class Documents extends Service
         $stream = fopen($filePath, 'r');
 
         while (!feof($stream)) {
-            $fileByteArray = array_merge($fileByteArray, $this->string2intArr(fgets($stream)));
+            $fileByteArray = array_merge($fileByteArray, $this->stringToByteArray(fgets($stream)));
         }
 
         fclose($stream);
@@ -78,15 +78,14 @@ class Documents extends Service
         );
     }
 
-    public function string2intArr($string)
+    public function stringToByteArray($string)
     {
-        $l = strlen($string);
-        $r = [];
-        for ($i = 0; $i < $l; ++$i) {
-            $r[] = ord($string[$i]);
+        $result = [];
+        for ($i = 0; $i < strlen($string); ++$i) {
+            $result[] = ord($string[$i]);
         }
 
-        return $r;
+        return $result;
     }
 
     private function computeMetaData(array $metaDataOptions)
