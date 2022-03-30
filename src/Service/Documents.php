@@ -3,6 +3,7 @@
 namespace ItkDev\GetOrganized\Service;
 
 use ItkDev\GetOrganized\Exception\GetOrganizedClientException;
+use ItkDev\GetOrganized\Exception\InvalidFilePathException;
 use ItkDev\GetOrganized\Exception\InvalidResponseException;
 use ItkDev\GetOrganized\Service;
 
@@ -37,5 +38,56 @@ class Documents extends Service
         }
 
         throw new InvalidResponseException('Metadata missing in response');
+    }
+
+    /**
+     * @throws GetOrganizedClientException
+     * @throws InvalidFilePathException
+     */
+    public function AddToDocumentLibrary(string $filePath, string $caseId, string $fileName = '', array $metadata = [], bool $overwrite = true, string $listName = 'Dokumenter', string $folderPath = '')
+    {
+        if (!file_exists($filePath)) {
+            throw new InvalidFilePathException(sprintf('File %s does not exist', $filePath));
+        }
+
+        return $this->getData(
+            'POST',
+            $this->getApiBasePath().__FUNCTION__,
+            ['json' => [
+                'bytes' => $this->fileToIntArray($filePath),
+                'CaseId' => $caseId,
+                'ListName' => $listName,
+                'FolderPath' => $folderPath,
+                'FileName' => $fileName,
+                'Metadata' => $this->computeMetaData($metadata)->asXML(),
+                'Overwrite' => $overwrite,
+            ]],
+        );
+    }
+
+    public function fileToIntArray(string $filename): array
+    {
+        $ints = [];
+        $handle = fopen($filename, 'rb');
+        while (!feof($handle)) {
+            $bytes = fread($handle, 1024);
+            if ($bytes) {
+                $ints[] = array_map('ord', str_split($bytes));
+            }
+        }
+        fclose($handle);
+
+        return array_merge(...$ints);
+    }
+
+    private function computeMetaData(array $metaDataOptions)
+    {
+        // "<z:row xmlns:z='#RowsetSchema' ows_CustomProperty='Another prop value' />"
+        $metadata = new \SimpleXMLElement('<z:row xmlns:z="#RowsetSchema"/>');
+        foreach ($metaDataOptions as $name => $value) {
+            $metadata->addAttribute($name, $value);
+        }
+
+        return $metadata;
     }
 }
