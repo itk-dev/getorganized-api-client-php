@@ -15,6 +15,7 @@ final class CasesTest extends TestCase
     public function testFindCases(array $query, $expected): void
     {
         $client = new MockClient();
+
         /** @var Cases $service */
         $service = $client->api('cases');
 

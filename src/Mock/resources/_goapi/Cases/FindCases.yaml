@@ -1,15 +1,18 @@
-#-
-#  request:
-#    # default: GET
-#    method: POST
-#    options:
-#      # query (string or associative array)
-#      # query: []
-#      # string|array
-#      json: []
-#  response:
-#    # @var string|array
-#    body: '[]'
+# -
+#   request:
+#     # default: GET
+#     method: POST
+#     # query (string or associative array)
+#     # query: []
+#     # array
+#     options:
+#       # array
+#       json: []
+#       # string
+#       body: ''
+#   response:
+#     # @var string|array
+#     body: '[]'
 
 -
   request:
@@ -30,7 +33,7 @@
 -
   request:
     method: POST
-    path: _goapi/Cases/FindCases
+#    path: _goapi/Cases/FindCases
     options:
       body: |
         {
