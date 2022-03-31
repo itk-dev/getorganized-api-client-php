@@ -1,0 +1,35 @@
+-
+  request:
+    method: POST
+    options:
+      json:
+        bytes: '<@file_to_int_array("../../assets/pipfugl.png")>'
+        CaseId: 'GEO-2022-000114'
+        ListName: 'Dokumenter'
+        FolderPath: ''
+        FileName: ''
+        Metadata: '<z:row xmlns:z="#RowsetSchema"/>'
+        Overwrite: true
+  response:
+    body: |
+      {
+        "DocId": 215820
+      }
+
+-
+  request:
+    method: POST
+    options:
+      json:
+        bytes: '<@file_to_int_array("../../assets/pipfugl.png")>'
+        CaseId: 'GEO-2022-000114'
+        ListName: 'Dokumenter'
+        FolderPath: ''
+        FileName: 'pipfugl.png'
+        Metadata: '<z:row xmlns:z="#RowsetSchema" ows_CustomProperty="Another prop value" ows_CCMMustBeOnPostList="0"/>'
+        Overwrite: true
+  response:
+    body: |
+      {
+        "DocId": 215821
+      }

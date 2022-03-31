@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-namespace ItkDev\GetOrganized\Service;
+namespace ItkDev\GetOrganized\Service\Cases;
 
 use ItkDev\GetOrganized\Mock\MockClient;
+use ItkDev\GetOrganized\Service\Cases;
 use PHPUnit\Framework\TestCase;
 
-final class CasesTest extends TestCase
+final class FindCasesTest extends TestCase
 {
     /**
      * @dataProvider findCasesDataProvider

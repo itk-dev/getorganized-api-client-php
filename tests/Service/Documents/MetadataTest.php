@@ -2,15 +2,16 @@
 
 declare(strict_types=1);
 
-namespace ItkDev\GetOrganized\Service;
+namespace ItkDev\GetOrganized\Service\Documents;
 
 use ItkDev\GetOrganized\Mock\MockClient;
+use ItkDev\GetOrganized\Service\Documents;
 use PHPUnit\Framework\TestCase;
 
-final class DocumentsTest extends TestCase
+final class MetadataTest extends TestCase
 {
     /**
-     * @dataProvider findCasesDataProvider
+     * @dataProvider GetMetadataProvider
      */
     public function testGetMetadata(int $docId, $expected): void
     {
@@ -22,7 +23,7 @@ final class DocumentsTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function findCasesDataProvider(): iterable
+    public function GetMetadataProvider(): iterable
     {
         yield [
             215820,
