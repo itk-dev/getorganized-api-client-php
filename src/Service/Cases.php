@@ -14,6 +14,18 @@ class Cases extends Service
     }
 
     /**
+     * This method allows finding cases based on a caseId pattern.
+     *
+     * Example query:
+     *  $query = [
+     *      'CaseIdFilter' => 'AKT-*',
+     *      'IncludeRegularCases' => true,
+     *      'IncludeOrphanedCases' => false,
+     *      'StartItemIndex' => 0,
+     *      'ItemCount' => 30,
+     *      'CustomProperties' => '',
+     *  ];
+     *
      * @throws GetOrganizedClientException
      */
     public function FindCases(array $query)
