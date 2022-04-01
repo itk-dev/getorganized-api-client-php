@@ -16,7 +16,7 @@ class Documents extends Service
     }
 
     /**
-     * Gets document's metadata without system fields by DocID.
+     * Gets document metadata without system fields by DocID.
      *
      * @throws GetOrganizedClientException
      */

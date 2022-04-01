@@ -12,7 +12,7 @@ class Tiles extends Service
     }
 
     /**
-     * Gets the list of links and their attributes in the GerOrganized global tile base navigation.
+     * Gets the list of links and their attributes in the GetOrganized global tile base navigation.
      */
     public function GetTilesNavigation()
     {

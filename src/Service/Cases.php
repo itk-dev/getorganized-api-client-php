@@ -14,7 +14,7 @@ class Cases extends Service
     }
 
     /**
-     * This method allows finding cases based on a caseId pattern.
+     * Gets cases based on a caseId pattern.
      *
      * Example query:
      *  $query = [
