@@ -16,6 +16,8 @@ class Documents extends Service
     }
 
     /**
+     * Gets document metadata without system fields by DocID.
+     *
      * @throws GetOrganizedClientException
      */
     public function Metadata(int $docId)
@@ -33,6 +35,14 @@ class Documents extends Service
     }
 
     /**
+     * Adds document to chosen case.
+     *
+     * Example metadata:
+     *  $metadata = [
+     *      'ows_CustomProperty' => 'Another prop value',
+     *      'ows_CCMMustBeOnPostList' => 0,
+     *  ];
+     *
      * @throws GetOrganizedClientException
      * @throws InvalidFilePathException
      */

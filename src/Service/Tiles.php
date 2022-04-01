@@ -11,6 +11,9 @@ class Tiles extends Service
         return '/_goapi/Administration/';
     }
 
+    /**
+     * Gets the list of links and their attributes in the GetOrganized global tile base navigation.
+     */
     public function GetTilesNavigation()
     {
         return $this->getData(
