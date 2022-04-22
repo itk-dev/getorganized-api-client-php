@@ -27,6 +27,12 @@ abstract class Service
     {
         $response = $this->client->request($method, $url, $options);
 
-        return $response->toArray();
+        // The response body may be empty which will throw an exception in
+        // Response::toArray(), but we don't want any errors in that case.
+        try {
+            return $response->toArray();
+        } catch (\JsonException $jsonException) {
+            return [];
+        }
     }
 }

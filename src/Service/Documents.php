@@ -67,6 +67,42 @@ class Documents extends Service
         );
     }
 
+    /**
+     * Finalize (“journaliser”) a single document.
+     */
+    public function Finalize(int $documentId, array $parameters = [
+        'ShouldCloseOpenTasks' => false,
+    ])
+    {
+        return $this->getData(
+            'POST',
+            $this->getApiBasePath().'Finalize/ByDocumentId',
+            [
+                'json' => [
+                    'DocID' => $documentId,
+                ] + $parameters,
+            ],
+        );
+    }
+
+    /**
+     * Finalize (“journaliser”) a list of documents.
+     */
+    public function FinalizeMultiple(array $documentIds, array $parameters = [
+        'ShouldCloseOpenTasks' => false,
+    ])
+    {
+        return $this->getData(
+            'POST',
+            $this->getApiBasePath().'FinalizeMultiple/ByDocumentId',
+            [
+                'json' => [
+                    'DocumentIds' => $documentIds,
+                ] + $parameters,
+            ],
+        );
+    }
+
     public function fileToIntArray(string $filename): array
     {
         $ints = [];
