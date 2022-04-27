@@ -103,6 +103,25 @@ class Documents extends Service
         );
     }
 
+    /**
+     * Un-finalize (“af-journaliser”) a list of documents.
+     */
+    public function UnmarkFinalized(array $documentIds, array $parameters = [
+        'CheckInComment' => 'Unfinalize',
+        'OnlyUnfinalize' => true,
+    ])
+    {
+        return $this->getData(
+            'POST',
+            $this->getApiBasePath().'UnmarkFinalizedByDocumentId',
+            [
+                'json' => [
+                    'DocIds' => $documentIds,
+                ] + $parameters,
+            ],
+        );
+    }
+
     public function fileToIntArray(string $filename): array
     {
         $ints = [];
