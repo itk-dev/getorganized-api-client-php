@@ -17,11 +17,31 @@ class Client implements ClientInterface
     private string $baseUri;
     private ?HttpClientInterface $httpClient = null;
 
-    public function __construct(string $username, string $password, string $baseUrl)
+    /**
+     * Construct a new client.
+     *
+     * Note: If passing a http client, the client must be fully configured to
+     * send api requests, i.e. be authenticated and have the right api base uri
+     * set. Use Client::createHttpClient() to get the default http client.
+     *
+     * For logging and debugging, a TraceableHttpClient
+     * <https://github.com/symfony/http-client/blob/5.4/TraceableHttpClient.php>
+     * can be used to wrap the default client, e.g.
+     *
+     * <code>
+     * $httpClient = new TraceableHttpClient(Client::createHttpClient(…));
+     * $httpClient->setLogger($this->logger);
+     * $client = new Client(…, $httpClient);
+     * </code>
+     *
+     * @param HttpClientInterface|null $httpClient optional http client used for api requests
+     */
+    public function __construct(string $username, string $password, string $baseUrl, HttpClientInterface $httpClient = null)
     {
         $this->username = $username;
         $this->password = $password;
         $this->baseUri = $baseUrl;
+        $this->httpClient = $httpClient;
     }
 
     /**
@@ -52,12 +72,20 @@ class Client implements ClientInterface
         return $this->getHttpClient()->request($method, $url, $options);
     }
 
+    /**
+     * Create the default http client used for sending requests to the GetOrganized api.
+     */
+    public static function createHttpClient(string $username, string $password, string $baseUri): HttpClientInterface
+    {
+        return HttpClient::createForBaseUri($baseUri, [
+            'auth_ntlm' => $username.':'.$password,
+        ]);
+    }
+
     protected function getHttpClient(): HttpClientInterface
     {
         if (null === $this->httpClient) {
-            $this->httpClient = HttpClient::createForBaseUri($this->baseUri, [
-                'auth_ntlm' => $this->username.':'.$this->password,
-            ]);
+            $this->httpClient = self::createHttpClient($this->username, $this->password, $this->baseUri);
         }
 
         return $this->httpClient;
