@@ -137,6 +137,26 @@ class Documents extends Service
         return array_merge(...$ints);
     }
 
+    public function getDocumentsByCaseId(string $caseId): array
+    {
+        /** @var Cases $casesService */
+        $casesService = $this->client->api('cases');
+        $case = $casesService->getByCaseId($caseId);
+        if (null === $case || !isset($case['RelativeUrl'])) {
+            return [];
+        }
+
+        $relativeUrl = $case['RelativeUrl'];
+
+        $url = sprintf('%1$s/_api/web/getFolderByServerRelativeUrl(\'%1$s/Dokumenter/\')/Files?$select=ListItemAllFields/*&$expand=ListItemAllFields', $relativeUrl);
+        $data = $this->getData('GET', $url, [
+            // Request JSON response.
+            'headers' => ['accept' => 'application/json'],
+        ]);
+
+        return $data['value'] ?? [];
+    }
+
     /**
      * Build XML metadata element from metadata name-value pairs.
      *

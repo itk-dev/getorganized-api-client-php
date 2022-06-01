@@ -11,7 +11,7 @@ abstract class Service
      */
     abstract protected function getApiBasePath(): string;
 
-    private ClientInterface $client;
+    protected ClientInterface $client;
 
     public function __construct(ClientInterface $client)
     {
