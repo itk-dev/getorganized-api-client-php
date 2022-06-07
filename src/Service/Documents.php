@@ -52,11 +52,13 @@ class Documents extends Service
             throw new InvalidFilePathException(sprintf('File %s does not exist', $filePath));
         }
 
-        return $this->getData(
+        $bytes = $this->fileToIntArray($filePath);
+
+        $result = $this->getData(
             'POST',
             $this->getApiBasePath().__FUNCTION__,
             ['json' => [
-                'bytes' => $this->fileToIntArray($filePath),
+                'bytes' => $bytes,
                 'CaseId' => $caseId,
                 'ListName' => $listName,
                 'FolderPath' => $folderPath,
@@ -65,6 +67,11 @@ class Documents extends Service
                 'Overwrite' => $overwrite,
             ]],
         );
+
+        // Help the garbage collector.
+        unset($bytes);
+
+        return $result;
     }
 
     /**
@@ -124,17 +131,16 @@ class Documents extends Service
 
     public function fileToIntArray(string $filename): array
     {
-        $ints = [];
-        $handle = fopen($filename, 'rb');
-        while (!feof($handle)) {
-            $bytes = fread($handle, 1024);
-            if ($bytes) {
-                $ints[] = array_map('ord', str_split($bytes));
-            }
-        }
-        fclose($handle);
+        $contents = file_get_contents($filename);
+        $size = strlen($contents);
+        // Use https://www.php.net/manual/en/class.splfixedarray.php to optimize memory usage.
+        $ints = new \SplFixedArray($size);
 
-        return array_merge(...$ints);
+        for ($i = 0; $i < $size; $i++) {
+            $ints[$i] = ord($contents[$i]);
+        }
+
+        return $ints;
     }
 
     public function getDocumentsByCaseId(string $caseId): array
