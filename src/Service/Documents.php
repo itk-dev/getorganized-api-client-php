@@ -136,7 +136,7 @@ class Documents extends Service
         // Use https://www.php.net/manual/en/class.splfixedarray.php to optimize memory usage.
         $ints = new \SplFixedArray($size);
 
-        for ($i = 0; $i < $size; $i++) {
+        for ($i = 0; $i < $size; ++$i) {
             $ints[$i] = ord($contents[$i]);
         }
 
