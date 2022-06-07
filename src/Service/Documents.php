@@ -52,7 +52,7 @@ class Documents extends Service
             throw new InvalidFilePathException(sprintf('File %s does not exist', $filePath));
         }
 
-        $bytes = $this->fileToIntArray($filePath);
+        $bytes = self::fileToIntArray($filePath);
 
         $result = $this->getData(
             'POST',
@@ -129,7 +129,7 @@ class Documents extends Service
         );
     }
 
-    public function fileToIntArray(string $filename): \SplFixedArray
+    public static function fileToIntArray(string $filename): \SplFixedArray
     {
         $contents = file_get_contents($filename);
         $size = strlen($contents);

@@ -3,6 +3,7 @@
 namespace ItkDev\GetOrganized\Mock;
 
 use ItkDev\GetOrganized\Mock\Exception\InvalidRequestException;
+use ItkDev\GetOrganized\Service\Documents;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpClient\HttpClientTrait;
 use Symfony\Component\HttpClient\Response\MockResponse;
@@ -41,24 +42,6 @@ final class RequestHelper
         throw new InvalidRequestException($currentRequest);
     }
 
-    /**
-     * @return int[]|array
-     */
-    public function fileToIntArray(string $filename): array
-    {
-        $ints = [];
-        $handle = fopen($filename, 'rb');
-        while (!feof($handle)) {
-            $bytes = fread($handle, 1024);
-            if ($bytes) {
-                $ints[] = array_map('ord', str_split($bytes));
-            }
-        }
-        fclose($handle);
-
-        return array_merge(...$ints);
-    }
-
     private function buildRequest(string $method, $uri, array $options, array $item = []): MockRequest
     {
         $options += ['base_uri' => 'https://example.com'];
@@ -86,7 +69,7 @@ final class RequestHelper
                 case 'file_to_int_array':
                     $filename = preg_replace('/^(["\'])(?P<value>.*)\1$/', '$2', $matches['args']);
 
-                    return $this->fileToIntArray($filename);
+                    return Documents::fileToIntArray($filename);
             }
         }
 
