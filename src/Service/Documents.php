@@ -129,7 +129,7 @@ class Documents extends Service
         );
     }
 
-    public function fileToIntArray(string $filename): array
+    public function fileToIntArray(string $filename): \SplFixedArray
     {
         $contents = file_get_contents($filename);
         $size = strlen($contents);
