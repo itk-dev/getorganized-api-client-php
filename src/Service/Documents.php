@@ -129,7 +129,12 @@ class Documents extends Service
         );
     }
 
-    public static function fileToIntArray(string $filename): \SplFixedArray
+    /**
+     * Get contents of a file as an array of integers.
+     *
+     * @return array|\SplFixedArray An array for PHP prior to 8.1 and otherwise a SplFixedArray
+     */
+    public static function fileToIntArray(string $filename)
     {
         $contents = file_get_contents($filename);
         $size = strlen($contents);
@@ -140,7 +145,10 @@ class Documents extends Service
             $ints[$i] = ord($contents[$i]);
         }
 
-        return $ints;
+        // For PHP prior to 8.1, convert to array to sure that it's JSON
+        // serialized as an array (cf.
+        // https://php.watch/versions/8.1/SplFixedArray-JsonSerializable-json_encode).
+        return PHP_VERSION_ID < 801000 ? $ints->toArray() : $ints;
     }
 
     public function getDocumentsByCaseId(string $caseId): array
