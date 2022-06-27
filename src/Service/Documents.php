@@ -172,6 +172,83 @@ class Documents extends Service
     }
 
     /**
+     * Add document to case using SOAP.
+     *
+     * Using the JSON api requires converting the file to a list of bytes
+     * (integers) which exhausts PHP resources for large files. SOAP only
+     * requires base64 encoding the file which is much less resource intensive.
+     *
+     * @see AddToDocumentLibrary for details on parameters.
+     */
+    public function AddToCaseSOAP(string $filePath, string $caseId, string $fileName = '', array $metadata = [], bool $overwrite = true, string $listName = 'Dokumenter', string $folderPath = '')
+    {
+        if (!file_exists($filePath)) {
+            throw new InvalidFilePathException(sprintf('File %s does not exist', $filePath));
+        }
+
+        // @see /_vti_bin/Document.asmx?op=AddToCase
+        $sxe = new \SimpleXMLElement(<<<'XML'
+<?xml version="1.0" encoding="utf-8"?>
+<soap12:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://www.w3.org/2003/05/soap-envelope">
+  <soap12:Body>
+    <AddToCase xmlns="http://netcompany.com/ncsolutions/ccm/webservices">
+      <bytes/>
+      <caseID/>
+      <listName/>
+      <folderPath/>
+      <fileName/>
+      <metadata/>
+      <overwrite/>
+    </AddToCase>
+  </soap12:Body>
+</soap12:Envelope>
+XML
+);
+
+        $sxe->registerXPathNamespace('soap12', 'http://www.w3.org/2003/05/soap-envelope');
+        $sxe->registerXPathNamespace('netcompany', 'http://netcompany.com/ncsolutions/ccm/webservices');
+        $addToCase = $sxe->xpath('//soap12:Body/netcompany:AddToCase')[0];
+
+        $addToCase->bytes = base64_encode(file_get_contents($filePath));
+        $addToCase->caseID = $caseId;
+        $addToCase->listName = $listName;
+        $addToCase->folderPath = $folderPath;
+        $addToCase->fileName = $fileName;
+        $addToCase->metadata = $this->buildMetadata($metadata);
+        $addToCase->overwrite = $overwrite ? 'true' : 'false';
+
+        // We need as much time as possible.
+        set_time_limit(0);
+
+        try {
+            $result = $this->request(
+                'POST',
+                '/_vti_bin/Document.asmx',
+                [
+                    'body' => $sxe->asXML(),
+                    'headers' => [
+                        'content-type' => 'application/soap+xml; charset=utf-8',
+                    ],
+                    // We need as much time as possible.
+                    'timeout' => 60 * 60,
+                    'max_duration' => \INF,
+                ]
+            );
+
+            $sxe = new \SimpleXMLElement((string) $result->getContent());
+            $sxe->registerXPathNamespace('netcompany', 'http://netcompany.com/ncsolutions/ccm/webservices');
+            $addToCaseResponse = $sxe->xpath('//netcompany:AddToCaseResponse')[0] ?? null;
+
+            // Create results similar to the one returned by the JSON API.
+            return [
+                'DocID' => $addToCaseResponse ? (int) $addToCaseResponse->documentId : null,
+            ];
+        } catch (\Exception $exception) {
+            return [];
+        }
+    }
+
+    /**
      * Build XML metadata element from metadata name-value pairs.
      *
      * Metadata pairs will be set as attributes on a <z:row xmlns:z='#RowsetSchema'/> element, e.g.
