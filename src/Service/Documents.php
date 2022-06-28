@@ -241,7 +241,7 @@ XML
 
             // Create results similar to the one returned by the JSON API.
             return [
-                'DocID' => $addToCaseResponse ? (int) $addToCaseResponse->documentId : null,
+                'DocId' => $addToCaseResponse ? (int) $addToCaseResponse->documentId : null,
             ];
         } catch (\Exception $exception) {
             return [];
