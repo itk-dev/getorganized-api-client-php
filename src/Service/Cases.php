@@ -53,7 +53,7 @@ class Cases extends Service
     }
 
     /**
-     * Example query:.
+     * Example query.
      *
      * $query = [
      *   'FieldProperties' => [
@@ -95,5 +95,53 @@ class Cases extends Service
         ]);
 
         return $cases['CasesInfo'][0] ?? null;
+    }
+
+    /**
+     * Example query.
+     *
+     * $query = [
+     *   'CaseTypePrefix' => 'BOR',
+     *   'MetadataXml' =>
+     *     "<z:row xmlns:z=\"#RowsetSchema\"
+     *      ows_Title=\"0123456789 - Test borger\"
+     *      ows_CCMContactData=\"Test borger;#;#0123456789;#;#\"
+     *      ows_CCMContactData_CPR=\"0123456789\"
+     *      ows_CaseStatus=\"Åben\"
+     *      />",
+     *  'ReturnWhenCaseFullyCreated' => true,
+     * ];
+     */
+    public function CreateCase(array $query): ?array
+    {
+        return $this->getData(
+            'POST',
+            $this->getApiBasePath(),
+            ['json' => $query],
+        );
+    }
+
+    /**
+     * Example query.
+     *
+     * $query = [
+     *   'CaseTypePrefix' => 'BOR',
+     *   'MetadataXml' =>
+     *     "<z:row xmlns:z=\"#RowsetSchema\"
+     *     ows_Title=\"Undersag - test\"
+     *     ows_CCMParentCase=\"BOR-2022-000038\"
+     *     ows_ContentTypeId=\"0x0100512AABDB08FA4fadB4A10948B5A56C7C01\"
+     *     ows_CCMContactData_CPR=\"0123456789\"
+     *     ows_CaseStatus=\"Åben\"/>",
+     *  'ReturnWhenCaseFullyCreated' => true,
+     *  ];
+     */
+    public function CreateSubCase(array $query): ?array
+    {
+        return $this->getData(
+            'POST',
+            $this->getApiBasePath(),
+            ['json' => $query],
+        );
     }
 }
