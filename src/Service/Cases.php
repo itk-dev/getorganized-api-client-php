@@ -16,8 +16,8 @@ class Cases extends Service
     /**
      * Gets cases based on a caseId pattern.
      *
-     * Example data:
-     *  $data = [
+     * Example query:
+     *  $query = [
      *      'CaseIdFilter' => 'AKT-*',
      *      'IncludeRegularCases' => true,
      *      'IncludeOrphanedCases' => false,
@@ -28,12 +28,12 @@ class Cases extends Service
      *
      * @throws GetOrganizedClientException
      */
-    public function FindCases(array $data)
+    public function FindCases(array $query)
     {
         $result = $this->getData(
             'POST',
             $this->getApiBasePath().__FUNCTION__,
-            ['json' => $data],
+            ['json' => $query],
         );
 
         if (isset($result['ResultsXml'])) {
@@ -55,8 +55,8 @@ class Cases extends Service
     /**
      * Finds cases by properties.
      *
-     * Example data:
-     * $data = [
+     * Example query:
+     * $query = [
      *   'FieldProperties' => [
      *     [
      *       'InternalName' => 'ows_CaseID',
@@ -66,12 +66,12 @@ class Cases extends Service
      *   'CaseTypePrefixes' => ['GEO'],
      * ];
      */
-    public function FindByCaseProperties(array $data): array
+    public function FindByCaseProperties(array $query): array
     {
         return $this->getData(
             'POST',
             $this->getApiBasePath().__FUNCTION__,
-            ['json' => $data],
+            ['json' => $query],
         );
     }
 
