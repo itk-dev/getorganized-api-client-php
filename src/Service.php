@@ -58,7 +58,7 @@ abstract class Service
      *
      *   <z:row xmlns:z="#RowsetSchema" ows_CustomProperty="Another prop value" ows_CCMMustBeOnPostList="0"/>
      */
-    public function buildMetadata(array $metadata): string
+    protected function buildMetadata(array $metadata): string
     {
         $doc = new DOMDocument();
         $doc->loadXML('<z:row xmlns:z="#RowsetSchema"/>');
@@ -78,7 +78,7 @@ abstract class Service
      *
      * @throws \Exception
      */
-    public function parseMetadata(string $xml): array
+    protected function parseMetadata(string $xml): array
     {
         $metadata = [];
         $doc = new DOMDocument();
