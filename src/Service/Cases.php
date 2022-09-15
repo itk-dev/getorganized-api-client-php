@@ -147,4 +147,21 @@ class Cases extends Service
             ['json' => $data],
         );
     }
+
+    /**
+     * Gets case metadata.
+     */
+    public function Metadata(string $caseId): ?array
+    {
+        $result = $this->getData(
+            'GET',
+            $this->getApiBasePath().__FUNCTION__.'/'.$caseId,
+        );
+
+        if (isset($result['Metadata'])) {
+            return $this->parseMetadata($result['Metadata']);
+        }
+
+        throw new InvalidResponseException('Metadata missing in response');
+    }
 }
