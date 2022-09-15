@@ -2,7 +2,6 @@
 
 namespace ItkDev\GetOrganized\Service;
 
-use DOMDocument;
 use ItkDev\GetOrganized\Exception\GetOrganizedClientException;
 use ItkDev\GetOrganized\Exception\InvalidFilePathException;
 use ItkDev\GetOrganized\Exception\InvalidResponseException;
@@ -246,50 +245,5 @@ XML
         } catch (\Exception $exception) {
             return [];
         }
-    }
-
-    /**
-     * Build XML metadata element from metadata name-value pairs.
-     *
-     * Metadata pairs will be set as attributes on a <z:row xmlns:z='#RowsetSchema'/> element, e.g.
-     *
-     *   ['ows_CustomProperty' => 'Another prop value', 'ows_CCMMustBeOnPostList' => 0]
-     *
-     * will be converted to
-     *
-     *   <z:row xmlns:z="#RowsetSchema" ows_CustomProperty="Another prop value" ows_CCMMustBeOnPostList="0"/>
-     */
-    private function buildMetadata(array $metadata): string
-    {
-        $doc = new DOMDocument();
-        $doc->loadXML('<z:row xmlns:z="#RowsetSchema"/>');
-        /** @var \DOMElement $element */
-        $element = $doc->documentElement;
-        foreach ($metadata as $name => $value) {
-            $element->setAttribute($name, $value);
-        }
-
-        return $doc->saveXML($element);
-    }
-
-    /**
-     * Build metadata array from XML.
-     *
-     * Reverses transform in self::buildMetadata (which see).
-     *
-     * @throws \Exception
-     */
-    private function parseMetadata(string $xml): array
-    {
-        $metadata = [];
-        $doc = new DOMDocument();
-        $doc->loadXML($xml);
-        /** @var \DOMElement $element */
-        $element = $doc->documentElement;
-        foreach ($element->attributes as $name => $attribute) {
-            $metadata[$name] = $attribute->value;
-        }
-
-        return $metadata;
     }
 }

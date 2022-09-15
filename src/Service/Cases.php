@@ -101,50 +101,50 @@ class Cases extends Service
     /**
      * Creates case.
      *
-     * Example data:
+     * Example metadata:
      * $data = [
-     *   'CaseTypePrefix' => 'BOR',
-     *   'MetadataXml' =>
-     *     "<z:row xmlns:z=\"#RowsetSchema\"
-     *      ows_Title=\"0123456789 - Test borger\"
-     *      ows_CCMContactData=\"Test borger;#;#0123456789;#;#\"
-     *      ows_CCMContactData_CPR=\"0123456789\"
-     *      ows_CaseStatus=\"Åben\"
-     *      />",
-     *  'ReturnWhenCaseFullyCreated' => true,
+     *      'ows_Title' => '0123456789 - Test borger',
+     *      'ows_CCMContactData' => 'Test borger;#;#0123456789;#;#',
+     *      'ows_CCMContactData_CPR' => '0123456789',
+     *      'ows_CaseStatus' => 'Åben',
+     * ];
+     *
+     * Example metadata subcase:
+     *
+     * $data = [
+     *      'ows_Title' => 'Undersag - test',
+     *      'ows_CCMParentCase' => 'BOR-2022-000038',
+     *      'ows_ContentTypeId' => '0x0100512AABDB08FA4fadB4A10948B5A56C7C01',
+     *      'ows_CaseStatus' => 'Åben',
      * ];
      */
-    public function CreateCase(array $data): ?array
+    public function createCase(string $caseTypePrefix, array $metadata, bool $returnWhenCaseFullyCreated = true): ?array
     {
         return $this->getData(
             'POST',
             $this->getApiBasePath(),
-            ['json' => $data],
+            ['json' => [
+                'CaseTypePrefix' => $caseTypePrefix,
+                'MetadataXml' => $this->buildMetadata($metadata),
+                'ReturnWhenCaseFullyCreated' => $returnWhenCaseFullyCreated,
+            ]]
         );
     }
 
     /**
-     * Creates SubCase.
-     *
-     * Example data:
-     * $data = [
-     *   'CaseTypePrefix' => 'BOR',
-     *   'MetadataXml' =>
-     *     "<z:row xmlns:z=\"#RowsetSchema\"
-     *     ows_Title=\"Undersag - test\"
-     *     ows_CCMParentCase=\"BOR-2022-000038\"
-     *     ows_ContentTypeId=\"0x0100512AABDB08FA4fadB4A10948B5A56C7C01\"
-     *     ows_CCMContactData_CPR=\"0123456789\"
-     *     ows_CaseStatus=\"Åben\"/>",
-     *  'ReturnWhenCaseFullyCreated' => true,
-     *  ];
+     * Gets case metadata.
      */
-    public function CreateSubCase(array $data): ?array
+    public function Metadata(string $caseId): ?array
     {
-        return $this->getData(
-            'POST',
-            $this->getApiBasePath(),
-            ['json' => $data],
+        $result = $this->getData(
+            'GET',
+            $this->getApiBasePath().__FUNCTION__.'/'.$caseId,
         );
+
+        if (isset($result['Metadata'])) {
+            return $this->parseMetadata($result['Metadata']);
+        }
+
+        throw new InvalidResponseException('Metadata missing in response');
     }
 }
