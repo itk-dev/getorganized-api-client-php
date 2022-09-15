@@ -203,7 +203,7 @@ class Documents extends Service
   </soap12:Body>
 </soap12:Envelope>
 XML
-);
+        );
 
         $sxe->registerXPathNamespace('soap12', 'http://www.w3.org/2003/05/soap-envelope');
         $sxe->registerXPathNamespace('netcompany', 'http://netcompany.com/ncsolutions/ccm/webservices');
