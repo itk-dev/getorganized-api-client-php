@@ -53,8 +53,9 @@ class Cases extends Service
     }
 
     /**
-     * Example query:.
+     * Finds cases by properties.
      *
+     * Example query:
      * $query = [
      *   'FieldProperties' => [
      *     [
@@ -63,7 +64,7 @@ class Cases extends Service
      *     ],
      *   ],
      *   'CaseTypePrefixes' => ['GEO'],
-     * ]
+     * ];
      */
     public function FindByCaseProperties(array $query): array
     {
@@ -95,5 +96,55 @@ class Cases extends Service
         ]);
 
         return $cases['CasesInfo'][0] ?? null;
+    }
+
+    /**
+     * Creates case.
+     *
+     * Example metadata:
+     * $data = [
+     *      'ows_Title' => '0123456789 - Test borger',
+     *      'ows_CCMContactData' => 'Test borger;#;#0123456789;#;#',
+     *      'ows_CCMContactData_CPR' => '0123456789',
+     *      'ows_CaseStatus' => 'Åben',
+     * ];
+     *
+     * Example metadata subcase:
+     *
+     * $data = [
+     *      'ows_Title' => 'Undersag - test',
+     *      'ows_CCMParentCase' => 'BOR-2022-000038',
+     *      'ows_ContentTypeId' => '0x0100512AABDB08FA4fadB4A10948B5A56C7C01',
+     *      'ows_CaseStatus' => 'Åben',
+     * ];
+     */
+    public function createCase(string $caseTypePrefix, array $metadata, bool $returnWhenCaseFullyCreated = true): ?array
+    {
+        return $this->getData(
+            'POST',
+            $this->getApiBasePath(),
+            ['json' => [
+                'CaseTypePrefix' => $caseTypePrefix,
+                'MetadataXml' => $this->buildMetadata($metadata),
+                'ReturnWhenCaseFullyCreated' => $returnWhenCaseFullyCreated,
+            ]]
+        );
+    }
+
+    /**
+     * Gets case metadata.
+     */
+    public function Metadata(string $caseId): ?array
+    {
+        $result = $this->getData(
+            'GET',
+            $this->getApiBasePath().__FUNCTION__.'/'.$caseId,
+        );
+
+        if (isset($result['Metadata'])) {
+            return $this->parseMetadata($result['Metadata']);
+        }
+
+        throw new InvalidResponseException('Metadata missing in response');
     }
 }

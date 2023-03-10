@@ -2,7 +2,6 @@
 
 namespace ItkDev\GetOrganized\Service;
 
-use DOMDocument;
 use ItkDev\GetOrganized\Exception\GetOrganizedClientException;
 use ItkDev\GetOrganized\Exception\InvalidFilePathException;
 use ItkDev\GetOrganized\Exception\InvalidResponseException;
@@ -130,6 +129,50 @@ class Documents extends Service
     }
 
     /**
+     * Relates documents with specified relation.
+     *
+     * Call RelationTypes to get available types.
+     */
+    public function RelateDocuments(int $parentDocumentId, array $childrenDocumentIds, int $relationType)
+    {
+        return $this->getData(
+            'POST',
+            $this->getApiBasePath().__FUNCTION__,
+            [
+                'json' => [
+                        'ParentDocId' => $parentDocumentId,
+                        'ChildDocIds' => $childrenDocumentIds,
+                        'RelationTypeId' => $relationType,
+                    ],
+            ],
+        );
+    }
+
+    /**
+     * Deletes relation between parent and child document.
+     */
+    public function DeleteRelation(int $parentDocumentId, int $childDocumentId)
+    {
+        return $this->getData(
+            'DELETE',
+            $this->getApiBasePath().'Relation/'.$parentDocumentId.'/'.$childDocumentId,
+            [],
+        );
+    }
+
+    /**
+     * Get available document relation types.
+     */
+    public function RelationTypes()
+    {
+        return $this->getData(
+            'GET',
+            $this->getApiBasePath().__FUNCTION__,
+            [],
+        );
+    }
+
+    /**
      * Get contents of a file as an array of integers.
      *
      * @return array|\SplFixedArray An array for PHP prior to 8.1 and otherwise a SplFixedArray
@@ -203,7 +246,7 @@ class Documents extends Service
   </soap12:Body>
 </soap12:Envelope>
 XML
-);
+        );
 
         $sxe->registerXPathNamespace('soap12', 'http://www.w3.org/2003/05/soap-envelope');
         $sxe->registerXPathNamespace('netcompany', 'http://netcompany.com/ncsolutions/ccm/webservices');
@@ -246,50 +289,5 @@ XML
         } catch (\Exception $exception) {
             return [];
         }
-    }
-
-    /**
-     * Build XML metadata element from metadata name-value pairs.
-     *
-     * Metadata pairs will be set as attributes on a <z:row xmlns:z='#RowsetSchema'/> element, e.g.
-     *
-     *   ['ows_CustomProperty' => 'Another prop value', 'ows_CCMMustBeOnPostList' => 0]
-     *
-     * will be converted to
-     *
-     *   <z:row xmlns:z="#RowsetSchema" ows_CustomProperty="Another prop value" ows_CCMMustBeOnPostList="0"/>
-     */
-    private function buildMetadata(array $metadata): string
-    {
-        $doc = new DOMDocument();
-        $doc->loadXML('<z:row xmlns:z="#RowsetSchema"/>');
-        /** @var \DOMElement $element */
-        $element = $doc->documentElement;
-        foreach ($metadata as $name => $value) {
-            $element->setAttribute($name, $value);
-        }
-
-        return $doc->saveXML($element);
-    }
-
-    /**
-     * Build metadata array from XML.
-     *
-     * Reverses transform in self::buildMetadata (which see).
-     *
-     * @throws \Exception
-     */
-    private function parseMetadata(string $xml): array
-    {
-        $metadata = [];
-        $doc = new DOMDocument();
-        $doc->loadXML($xml);
-        /** @var \DOMElement $element */
-        $element = $doc->documentElement;
-        foreach ($element->attributes as $name => $attribute) {
-            $metadata[$name] = $attribute->value;
-        }
-
-        return $metadata;
     }
 }
