@@ -2,8 +2,8 @@
 
 namespace ItkDev\GetOrganized;
 
-use DOMDocument;
 use ItkDev\GetOrganized\Exception\GetOrganizedClientException;
+use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 
 abstract class Service
 {
@@ -42,7 +42,7 @@ abstract class Service
         // Response::toArray(), but we don't want any errors in that case.
         try {
             return $response->toArray();
-        } catch (\JsonException $jsonException) {
+        } catch (ExceptionInterface $exception) {
             return [];
         }
     }
@@ -60,7 +60,7 @@ abstract class Service
      */
     protected function buildMetadata(array $metadata): string
     {
-        $doc = new DOMDocument();
+        $doc = new \DOMDocument();
         $doc->loadXML('<z:row xmlns:z="#RowsetSchema"/>');
         /** @var \DOMElement $element */
         $element = $doc->documentElement;
@@ -81,7 +81,7 @@ abstract class Service
     protected function parseMetadata(string $xml): array
     {
         $metadata = [];
-        $doc = new DOMDocument();
+        $doc = new \DOMDocument();
         $doc->loadXML($xml);
         /** @var \DOMElement $element */
         $element = $doc->documentElement;

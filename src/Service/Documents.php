@@ -129,6 +129,50 @@ class Documents extends Service
     }
 
     /**
+     * Relates documents with specified relation.
+     *
+     * Call RelationTypes to get available types.
+     */
+    public function RelateDocuments(int $parentDocumentId, array $childrenDocumentIds, int $relationType)
+    {
+        return $this->getData(
+            'POST',
+            $this->getApiBasePath().__FUNCTION__,
+            [
+                'json' => [
+                        'ParentDocId' => $parentDocumentId,
+                        'ChildDocIds' => $childrenDocumentIds,
+                        'RelationTypeId' => $relationType,
+                    ],
+            ],
+        );
+    }
+
+    /**
+     * Deletes relation between parent and child document.
+     */
+    public function DeleteRelation(int $parentDocumentId, int $childDocumentId)
+    {
+        return $this->getData(
+            'DELETE',
+            $this->getApiBasePath().'Relation/'.$parentDocumentId.'/'.$childDocumentId,
+            [],
+        );
+    }
+
+    /**
+     * Get available document relation types.
+     */
+    public function RelationTypes()
+    {
+        return $this->getData(
+            'GET',
+            $this->getApiBasePath().__FUNCTION__,
+            [],
+        );
+    }
+
+    /**
      * Get contents of a file as an array of integers.
      *
      * @return array|\SplFixedArray An array for PHP prior to 8.1 and otherwise a SplFixedArray
