@@ -61,6 +61,6 @@ class Tiles extends Service
 The following commands let you test that the coding standards:
 
 ```sh
-composer coding-standards-check
+docker run --interactive --tty --rm --volume ${PWD}:/app itkdev/php7.4-fpm:latest composer coding-standards-check
 ```
 
