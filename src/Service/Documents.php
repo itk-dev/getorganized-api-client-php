@@ -53,6 +53,14 @@ class Documents extends Service
 
         $bytes = self::fileToIntArray($filePath);
 
+        if (empty($fileName)) {
+            $fileName = basename($filePath);
+        }
+
+        // Make sure that the file name is valid in Windows (cf.
+        // https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file#naming-conventions).
+        $fileName = preg_replace('@[<>:"/\\\\|?*]@', '_', $fileName);
+
         $result = $this->getData(
             'POST',
             $this->getApiBasePath().__FUNCTION__,
