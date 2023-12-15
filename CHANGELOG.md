@@ -9,6 +9,10 @@ about writing changes to this log.
 
 ## [Unreleased]
 
+## [1.2.1] 2023-12-15
+
+* Normalized file name for Windows
+
 ## [1.2.0] 2023-03-10
 
 * Added methods for relating documents in GO.
@@ -30,7 +34,8 @@ about writing changes to this log.
 
 ## [1.0.0] 2022-06-07
 
-[Unreleased]: https://github.com/itk-dev/getorganized-api-client-php/compare/1.2.0...HEAD
+[Unreleased]: https://github.com/itk-dev/getorganized-api-client-php/compare/1.2.1...HEAD
+[1.2.1]: https://github.com/itk-dev/getorganized-api-client-php/compare/1.2.0...1.2.1
 [1.2.0]: https://github.com/itk-dev/getorganized-api-client-php/compare/1.1.3...1.2.0
 [1.1.3]: https://github.com/itk-dev/getorganized-api-client-php/compare/1.1.2...1.1.3
 [1.1.2]: https://github.com/itk-dev/getorganized-api-client-php/compare/1.1.1...1.1.2
