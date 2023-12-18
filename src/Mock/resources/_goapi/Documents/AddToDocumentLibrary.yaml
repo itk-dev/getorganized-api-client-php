@@ -7,7 +7,7 @@
         CaseId: 'GEO-2022-000114'
         ListName: 'Dokumenter'
         FolderPath: ''
-        FileName: ''
+        FileName: 'pipfugl.png'
         Metadata: '<z:row xmlns:z="#RowsetSchema"/>'
         Overwrite: true
   response:
