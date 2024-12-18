@@ -44,7 +44,7 @@ final class AddToDocumentLibraryTest extends TestCase
                 [
                     'ows_CustomProperty' => 'Another prop value',
                     'ows_CCMMustBeOnPostList' => 0,
-                    ],
+                ],
                 true,
                 'Dokumenter',
                 '',

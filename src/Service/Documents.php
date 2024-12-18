@@ -151,10 +151,10 @@ class Documents extends Service
             $this->getApiBasePath().__FUNCTION__,
             [
                 'json' => [
-                        'ParentDocId' => $parentDocumentId,
-                        'ChildDocIds' => $childrenDocumentIds,
-                        'RelationTypeId' => $relationType,
-                    ],
+                    'ParentDocId' => $parentDocumentId,
+                    'ChildDocIds' => $childrenDocumentIds,
+                    'RelationTypeId' => $relationType,
+                ],
             ],
         );
     }
