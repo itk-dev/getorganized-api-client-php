@@ -61,6 +61,9 @@ class Documents extends Service
         // https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file#naming-conventions).
         $fileName = preg_replace('@[<>:"/\\\\|?*]@', '_', $fileName);
 
+        // Normalize white space.
+        $fileName = preg_replace('/[[:space:]]/', ' ', $fileName);
+
         $result = $this->getData(
             'POST',
             $this->getApiBasePath().__FUNCTION__,
