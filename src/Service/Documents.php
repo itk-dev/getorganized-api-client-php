@@ -62,7 +62,7 @@ class Documents extends Service
         $fileName = preg_replace('@[<>:"/\\\\|?*]@', '_', $fileName);
 
         // Normalize white space.
-        $fileName = preg_replace('/[[:space:]]/', ' ', $fileName);
+        $fileName = preg_replace('/[[:space:]]/', ' ', trim($fileName));
 
         $result = $this->getData(
             'POST',
