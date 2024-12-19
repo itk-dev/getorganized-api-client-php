@@ -36,7 +36,7 @@ class Client implements ClientInterface
      *
      * @param HttpClientInterface|null $httpClient optional http client used for api requests
      */
-    public function __construct(string $username, string $password, string $baseUrl, HttpClientInterface $httpClient = null)
+    public function __construct(string $username, string $password, string $baseUrl, ?HttpClientInterface $httpClient = null)
     {
         $this->username = $username;
         $this->password = $password;

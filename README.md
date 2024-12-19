@@ -59,8 +59,8 @@ class Tiles extends Service
 ### Tests
 
 ```sh
-docker run --interactive --tty --rm --volume ${PWD}:/app itkdev/php8.1-fpm:latest composer install
-docker run --interactive --tty --rm --volume ${PWD}:/app itkdev/php8.1-fpm:latest vendor/bin/phpunit
+docker run --interactive --tty --rm --volume ${PWD}:/app itkdev/php8.3-fpm:latest composer install
+docker run --interactive --tty --rm --volume ${PWD}:/app itkdev/php8.3-fpm:latest vendor/bin/phpunit
 ```
 
 ### Coding standards
@@ -68,19 +68,19 @@ docker run --interactive --tty --rm --volume ${PWD}:/app itkdev/php8.1-fpm:lates
 The following commands let you test that the code adheres to the coding standards:
 
 ```sh
-docker run --interactive --tty --rm --volume ${PWD}:/app itkdev/php8.1-fpm:latest composer install
-docker run --interactive --tty --rm --volume ${PWD}:/app itkdev/php8.1-fpm:latest composer coding-standards-check
+docker run --interactive --tty --rm --volume ${PWD}:/app itkdev/php8.3-fpm:latest composer install
+docker run --interactive --tty --rm --volume ${PWD}:/app itkdev/php8.3-fpm:latest composer coding-standards-check
 ```
 
 Automatically fix some coding standards issues by running
 
 ```sh
-docker run --interactive --tty --rm --volume ${PWD}:/app itkdev/php8.1-fpm:latest composer coding-standards-apply
+docker run --interactive --tty --rm --volume ${PWD}:/app itkdev/php8.3-fpm:latest composer coding-standards-apply
 ```
 
 ### Code analysis
 
 ```sh
-docker run --interactive --tty --rm --volume ${PWD}:/app itkdev/php8.1-fpm:latest composer install
-docker run --interactive --tty --rm --volume ${PWD}:/app itkdev/php8.1-fpm:latest composer code-analysis
+docker run --interactive --tty --rm --volume ${PWD}:/app itkdev/php8.3-fpm:latest composer install
+docker run --interactive --tty --rm --volume ${PWD}:/app itkdev/php8.3-fpm:latest composer code-analysis
 ```

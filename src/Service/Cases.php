@@ -78,7 +78,7 @@ class Cases extends Service
     /**
      * Find case by id.
      */
-    public function getByCaseId(string $caseId, string $caseTypePrefix = null): ?array
+    public function getByCaseId(string $caseId, ?string $caseTypePrefix = null): ?array
     {
         if (null === $caseTypePrefix) {
             // Use string before first hyphen as case type prefix.
