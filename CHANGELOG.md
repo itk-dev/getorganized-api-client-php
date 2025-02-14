@@ -9,6 +9,8 @@ about writing changes to this log.
 
 ## [Unreleased]
 
+* Updated GitHub workflow images.
+
 ## [1.2.2] 2024-12-18
 
 * Normalize white space in file names.

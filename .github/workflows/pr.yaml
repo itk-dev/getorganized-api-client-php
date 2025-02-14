@@ -2,7 +2,7 @@ on: pull_request
 name: Review
 jobs:
   test-composer-install:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
@@ -30,7 +30,7 @@ jobs:
         run: composer validate composer.json
 
   coding-standards:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
@@ -60,7 +60,7 @@ jobs:
         run: composer coding-standards-check
 
   code-analysis:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
@@ -90,7 +90,7 @@ jobs:
         run: composer code-analysis
 
   unit-tests:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
