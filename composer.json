@@ -21,7 +21,7 @@
     "require": {
         "php": "^7.4 || ^8.0",
         "ext-json": "*",
-        "symfony/http-client": "^5.4 || ^6.0",
+        "symfony/http-client": "^5.4 || ^6.0 || ^7.0",
         "ext-dom": "*"
     },
     "require-dev": {
@@ -29,8 +29,8 @@
         "phpspec/prophecy-phpunit": "^2.0",
         "phpstan/phpstan": "^1.4",
         "phpunit/phpunit": "^9.5",
-        "symfony/finder": "^5.4 || ^6.0",
-        "symfony/yaml": "^5.4 || ^6.0"
+        "symfony/finder": "^5.4 || ^6.0 || ^7.0",
+        "symfony/yaml": "^5.4 || ^6.0 || ^7.0"
     },
     "config": {
         "sort-packages": true,
