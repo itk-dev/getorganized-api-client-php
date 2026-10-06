@@ -9,6 +9,8 @@ about writing changes to this log.
 
 ## [Unreleased]
 
+## [1.3.0] 2026-10-06
+
 * [PR-25](https://github.com/itk-dev/getorganized-api-client-php/pull/25)
   Added support for Symfony 7
 * Updated GitHub workflow images.
@@ -42,7 +44,8 @@ about writing changes to this log.
 
 ## [1.0.0] 2022-06-07
 
-[Unreleased]: https://github.com/itk-dev/getorganized-api-client-php/compare/1.2.2...HEAD
+[Unreleased]: https://github.com/itk-dev/getorganized-api-client-php/compare/1.3.0...HEAD
+[1.3.0]: https://github.com/itk-dev/getorganized-api-client-php/compare/1.2.2...1.3.0
 [1.2.2]: https://github.com/itk-dev/getorganized-api-client-php/compare/1.2.1...1.2.2
 [1.2.1]: https://github.com/itk-dev/getorganized-api-client-php/compare/1.2.0...1.2.1
 [1.2.0]: https://github.com/itk-dev/getorganized-api-client-php/compare/1.1.3...1.2.0
