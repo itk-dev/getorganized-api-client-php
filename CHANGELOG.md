@@ -11,6 +11,7 @@ about writing changes to this log.
 
 * [PR-25](https://github.com/itk-dev/getorganized-api-client-php/pull/25)
   Added support for Symfony 7
+* Updated GitHub workflow images.
 
 ## [1.2.2] 2024-12-18
 
